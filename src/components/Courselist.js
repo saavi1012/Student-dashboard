@@ -4,18 +4,29 @@ import Apidetails from "../api/Apidetails";
 
 const Courselist = () => {
   const [courses, setCourses] = useState(null);
+  const [studentsData, setStudentsData] = useState([]);
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchData = async () => {
       try {
         const response = await Apidetails();
-        console.log("data", response.data);
-        setCourses(response.data);
+        console.log("Data", response.data);
+
+        if (response.data && response.data.length > 0) {
+          setCourses(response.data);
+
+          const studentsDataArray = response.data.map((course) => ({
+            courseId: course.id,
+            students: course.students,
+          }));
+
+          setStudentsData(studentsDataArray);
+        }
       } catch (err) {
-        console.error("Error fetching courses:", err);
+        console.error("Error fetching data:", err);
       }
     };
-    fetchCourses();
+    fetchData();
   }, []);
 
   return (
@@ -33,6 +44,23 @@ const Courselist = () => {
               </Link>
             </li>
           ))}
+      </ul>
+
+      <h1>Student List</h1>
+      <ul>
+        {studentsData.map((data) =>
+          data.students.map((student) => (
+            <li key={student.id}>
+              <Link to={`/Student/${student.id}`}>
+                <div>
+                  <strong>{student.id}, {student.name}</strong>
+                  <p>Email: {student.email}</p>
+                  <p>Course ID: {data.courseId}</p>
+                </div>
+              </Link>
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );

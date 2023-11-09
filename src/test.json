@@ -1,0 +1,127 @@
+[
+    {
+      "id": 1,
+      "name": "Introduction to React Native",
+      "instructor": "John Doe",
+      "description": "Learn the basics of React Native development and build your first mobile app.",
+      "enrollmentStatus": "Open",
+      "thumbnail": "your.image.here",
+      "duration": "8 weeks",
+      "schedule": "Tuesdays and Thursdays, 6:00 PM - 8:00 PM",
+      "location": "Online",
+      "prerequisites": [
+        "Basic JavaScript knowledge",
+        "Familiarity with React"
+      ],
+      "syllabus": [
+        {
+          "week": 1,
+          "topic": "Introduction to React Native",
+          "content": "Overview of React Native, setting up your development environment."
+        },
+        {
+          "week": 2,
+          "topic": "Building Your First App",
+          "content": "Creating a simple mobile app using React Native components."
+        }
+      ],
+      "students": [
+        {
+          "id": 101,
+          "name": "Alice Johnson",
+          "email": "alice@example.com",
+          "course_id": [1]
+        },
+        {
+          "id": 102,
+          "name": "Bob Smith",
+          "email": "bob@example.com",
+          "course_id": [1]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Advanced React Native Development",
+      "instructor": "Jane Smith",
+      "description": "Take your React Native skills to the next level and build complex mobile apps.",
+      "enrollmentStatus": "Closed",
+      "thumbnail": "your.image.here",
+      "duration": "12 weeks",
+      "schedule": "Mondays and Wednesdays, 7:00 PM - 9:00 PM",
+      "location": "Online",
+      "prerequisites": [
+        "Solid understanding of React Native",
+        "Experience with Redux"
+      ],
+      "syllabus": [
+        {
+          "week": 1,
+          "topic": "Advanced React Native Concepts",
+          "content": "Exploring advanced concepts and best practices."
+        },
+        {
+          "week": 2,
+          "topic": "State Management with Redux",
+          "content": "Implementing state management using Redux."
+        }
+      ],
+      "students": [
+        {
+          "id": 201,
+          "name": "Charlie Brown",
+          "email": "charlie@example.com",
+          "course_id": [2]
+        },
+        {
+          "id": 202,
+          "name": "Diana Smith",
+          "email": "diana@example.com",
+          "course_id": [2]
+        }
+      ]
+    }
+]
+
+
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Apidetails from "../api/Apidetails";
+
+const Courselist = () => {
+  const [courses, setCourses] = useState(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await Apidetails();
+        console.log("data", response.data);
+        setCourses(response.data);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+      }
+    };
+    fetchCourses();
+  }, []);
+
+  return (
+    <div>
+      <h1>Course List</h1>
+      <ul>
+        {courses &&
+          courses.map((course) => (
+            <li key={course.id}>
+              <Link to={`/Coursedetails/${course.id}`}>
+                <div>
+                  <strong>{course.name}</strong>
+                  <p>{course.description}</p>
+                </div>
+              </Link>
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Courselist;
